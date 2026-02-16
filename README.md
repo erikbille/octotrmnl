@@ -6,9 +6,9 @@
 [![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange)](https://workers.cloudflare.com/)
 [![TRMNL](https://img.shields.io/badge/TRMNL-Plugin-blue)](https://usetrmnl.com/)
 
-![TRMNL Display](https://via.placeholder.com/800x480/000000/FFFFFF?text=Add+your+TRMNL+display+screenshot+here)
-
-Display your Octopus Energy usage, costs, and carbon intensity forecasts on a TRMNL e-ink display.
+<p align="center">
+  <img src="img/SCR-20260216-swhq.png" alt="OctoTRMNL Display" width="600">
+</p>
 
 ## ✨ Features
 
