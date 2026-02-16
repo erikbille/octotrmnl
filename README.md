@@ -28,7 +28,7 @@
 │  TRMNL Device   │
 │  (800×480 px)   │
 └────────┬────────┘
-         │ Polls every 2-4 hours
+         │ Polls every 30 minutes
          ↓
 ┌─────────────────┐
 │ Cloudflare      │
