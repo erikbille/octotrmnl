@@ -1,0 +1,20 @@
+{
+  "name": "octotrmnl",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker to fetch and process Octopus Energy data for TRMNL display",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "octopus-energy",
+    "trmnl",
+    "cloudflare-worker"
+  ],
+  "author": "Erik Bille",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^4.65.0"
+  }
+}

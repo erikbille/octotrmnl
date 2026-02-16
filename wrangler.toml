@@ -1,0 +1,45 @@
+name = "octotrmnl"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[placement]
+mode = "smart"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
+
+# Public variables (non-sensitive configuration)
+# Replace these with your own tariff codes from Octopus Energy
+[vars]
+ELECTRICITY_PRODUCT = "YOUR-ELECTRICITY-PRODUCT-CODE"
+ELECTRICITY_TARIFF = "YOUR-ELECTRICITY-TARIFF-CODE"
+GAS_PRODUCT = "YOUR-GAS-PRODUCT-CODE"
+GAS_TARIFF = "YOUR-GAS-TARIFF-CODE"
+
+# Use Cloudflare KV for caching
+# Run: wrangler kv namespace create OCTOPUS_CACHE
+# Then paste the generated ID below
+[[kv_namespaces]]
+binding = "OCTOPUS_CACHE"
+id = "YOUR_KV_NAMESPACE_ID"
+
+# Secrets to configure via: wrangler secret put <KEY_NAME>
+# Required secrets:
+# - OCTOPUS_API_KEY: Your Octopus Energy API key
+# - MPAN: Electricity meter point administration number
+# - MPRN: Gas meter point reference number
+# - ELECTRICITY_SERIAL: Electricity meter serial number
+# - GAS_SERIAL: Gas meter serial number
+# - ACCOUNT_NUMBER: Your Octopus account number

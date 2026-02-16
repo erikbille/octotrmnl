@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=800, height=480">
+  <link rel="stylesheet" href="https://usetrmnl.com/css/latest/plugins.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 800px;
+      height: 480px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: white;
+      color: black;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      margin-bottom: 12px;
+      height: 130px;
+    }
+
+    .card {
+      border: 2px solid black;
+      padding: 10px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .card:not(:last-child) {
+      margin-right: 10px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: bold;
+      margin: 4px 0;
+      line-height: 1;
+    }
+
+    .card-label {
+      font-size: 16px;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    .chart-container {
+      flex: 1;
+      border: 2px solid black;
+      padding: 8px;
+      margin-bottom: 10px;
+      position: relative;
+      min-height: 0;
+      max-height: 240px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 10px;
+      font-size: 9px;
+      margin-bottom: 4px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .legend-bar {
+      width: 14px;
+      height: 10px;
+      border: 1px solid black;
+    }
+
+    .legend-bar.green {
+      background: black;
+    }
+
+    .legend-bar.moderate {
+      background: repeating-linear-gradient(
+        45deg,
+        black,
+        black 2px,
+        white 2px,
+        white 4px
+      );
+    }
+
+    .legend-bar.high {
+      background: repeating-linear-gradient(
+        90deg,
+        black,
+        black 2px,
+        white 2px,
+        white 4px
+      );
+    }
+
+    .chart {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .bar {
+      flex: 1;
+      margin: 0 1px;
+      background: black;
+      position: relative;
+    }
+
+    .bar.green {
+      background: black;
+      border: 2px solid black;
+    }
+
+    .bar.moderate {
+      background: repeating-linear-gradient(
+        45deg,
+        black,
+        black 2px,
+        white 2px,
+        white 4px
+      );
+    }
+
+    .bar.high {
+     background: repeating-linear-gradient(
+        90deg,
+        black,
+        black 2px,
+        white 2px,
+        white 4px
+      );
+    }
+
+    .time-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .footer {
+      border: 2px solid black;
+      padding: 6px 8px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 36px;
+    }
+
+    .footer-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .icon {
+      margin-right: 6px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .small-text {
+      font-size: 11px;
+      color: #333;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Section: Usage Cards -->
+  <div class="header">
+    <!-- Electricity Card -->
+    <div class="card">
+      <div class="card-title">Electricity</div>
+      <div class="card-value">{{ electricity.kwh }} kWh</div>
+      <div class="card-label">£{{ electricity.cost_gbp }}</div>
+      <div class="small-text">Avg: {{ electricity.daily_avg_kwh }} kWh/day</div>
+      {% if electricity.peak_time %}
+      <div class="small-text">Peak: {{ electricity.peak_time }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Gas Card -->
+    <div class="card">
+      <div class="card-title">Gas</div>
+      <div class="card-value">{{ gas.kwh }} kWh</div>
+      <div class="card-label">£{{ gas.cost_gbp }}</div>
+      <div class="small-text">Avg: {{ gas.daily_avg_kwh }} kWh/day</div>
+    </div>
+
+    <!-- Carbon Summary Card -->
+    <div class="card">
+      <div class="card-title">Green Energy</div>
+      <div class="card-value">{{ carbon_summary.green_percentage }}%</div>
+      <div class="card-label">of next 24h</div>
+      {% if carbon_summary.best_window_start %}
+      <div class="small-text">Best: {{ carbon_summary.best_window_start }} - {{ carbon_summary.best_window_end }}</div>
+      {% endif %}
+      {% if carbon_summary.next_green_start %}
+      <div class="small-text">Next green: {{ carbon_summary.next_green_start }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Middle Section: Carbon Intensity Chart -->
+  <div class="chart-container">
+    <div class="chart-title">Carbon Intensity Forecast (24h)</div>
+    <div class="chart-legend">
+      <div class="legend-item">
+        <div class="legend-bar green"></div>
+        <span>Low (&lt;99g)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-bar moderate"></div>
+        <span>Moderate</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-bar high"></div>
+        <span>High</span>
+      </div>
+    </div>
+    <div class="chart">
+      {% for period in carbon_forecast limit:48 %}
+        {% assign height_pct = period.intensity | divided_by: 3.0 %}
+        {% if height_pct > 100 %}
+          {% assign height_pct = 100 %}
+        {% endif %}
+
+        {% if period.index == "low" or period.index == "very low" %}
+          {% assign bar_class = "green" %}
+        {% elsif period.index == "moderate" %}
+          {% assign bar_class = "moderate" %}
+        {% else %}
+          {% assign bar_class = "high" %}
+        {% endif %}
+
+        <div class="bar {{ bar_class }}" style="height: {{ height_pct }}%;"></div>
+      {% endfor %}
+    </div>
+    <div class="time-labels">
+      {% assign now = "now" | date: "%s" %}
+      {% assign hours_0 = now | date: "%H:00" %}
+      {% assign time_6h = now | plus: 21600 | date: "%H:00" %}
+      {% assign time_12h = now | plus: 43200 | date: "%H:00" %}
+      {% assign time_18h = now | plus: 64800 | date: "%H:00" %}
+      {% assign time_24h = now | plus: 86400 | date: "%H:00" %}
+      <span>{{ hours_0 }}</span>
+      <span>{{ time_6h }}</span>
+      <span>{{ time_12h }}</span>
+      <span>{{ time_18h }}</span>
+      <span>{{ time_24h }}</span>
+    </div>
+  </div>
+
+  <!-- Bottom Section: Summary -->
+  <div class="footer">
+    <div class="footer-item">
+      <span>{{ electricity.month }} usage</span>
+    </div>
+    {% if carbon_summary.best_window_start %}
+    <div class="footer-item">
+      <span>Best: {{ carbon_summary.best_window_start }}-{{ carbon_summary.best_window_end }}</span>
+    </div>
+    {% endif %}
+    <div class="footer-item">
+      <span>Updated: {{ last_updated_formatted }}</span>
+    </div>
+  </div>
+</body>
+</html>

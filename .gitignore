@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+package-lock.json
+
+# Cloudflare
+.wrangler/
+wrangler.log
+
+# Environment files (never commit secrets!)
+.env
+.dev.vars
+
+# TRMNL local development
+.trmnlp/
+
+# macOS
+.DS_Store
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Plugin ZIPs (users build their own)
+*.zip
+
+# Claude Code artifacts
+.claude/
