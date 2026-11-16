@@ -19,7 +19,7 @@
 ✅ **Green Energy Insights** - % green energy, best time windows to run appliances
 ✅ **Cost Tracking** - Accurate cost calculation including unit rates and standing charges
 ✅ **Free Tier Friendly** - Runs entirely on Cloudflare Workers free tier with efficient caching
-✅ **Auto-Updates** - Refreshes every 3 hours automatically
+✅ **Auto-Updates** - Refreshes every 30 minutes automatically
 
 ## Architecture
 
@@ -194,7 +194,7 @@ Open http://localhost:1234 to preview your plugin with test data.
    - **Description**: Track energy usage and carbon intensity
    - **Strategy**: Polling
    - **Polling URL**: Your Cloudflare Worker URL
-   - **Refresh Interval**: 180 minutes (3 hours)
+   - **Refresh Interval**: 30 minutes
 4. Upload `plugin.liquid` as your template
 5. Save the plugin
 
@@ -202,7 +202,7 @@ Open http://localhost:1234 to preview your plugin with test data.
 
 1. In your TRMNL dashboard, add the plugin to your device
 2. Select viewport: **Full Screen**
-3. Set refresh schedule (recommended: every 3-4 hours)
+3. Set refresh schedule (recommended: every 30 minutes)
 4. Save and trigger a manual refresh
 
 Your TRMNL should now display your Octopus Energy data!
@@ -263,7 +263,7 @@ To minimize API calls and stay within Cloudflare's free tier:
 - **Carbon intensity**: Cached for 30 minutes
 - **Peak usage time**: Cached for 24 hours
 
-Total API calls per day: ~20-30 (well under Cloudflare's 100,000/day limit)
+Total API calls per day: ~50-70 (well under Cloudflare's 100,000/day limit)
 
 ## Troubleshooting
 
@@ -307,7 +307,7 @@ Peak time requires at least 7 days of half-hourly consumption data. If you just 
 
 Edit `strategy.yml`:
 ```yaml
-interval: 120  # Change to desired minutes
+interval: 30  # Change to desired minutes
 ```
 
 ### Modify Layout
@@ -329,14 +329,14 @@ Extend `src/index.js` to fetch additional data:
 ## Free Tier Limits
 
 **Cloudflare Workers (Free)**:
-- ✅ 100,000 requests/day (you'll use ~20-30)
+- ✅ 100,000 requests/day (you'll use ~50 with 30-min polling)
 - ✅ 10ms CPU time (current usage: ~5ms)
-- ✅ 100,000 KV reads/day (you'll use ~50-100)
+- ✅ 100,000 KV reads/day (you'll use ~100-150)
 
 **Octopus Energy API**:
 - ~100 requests/minute (dynamic limiting)
 - With caching, you'll make 5-7 requests per TRMNL refresh
-- At 3-hour intervals: ~40 requests/day
+- At 30-minute intervals with caching: ~50-70 requests/day
 
 Both well within limits! 🎉
 
