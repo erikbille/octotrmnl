@@ -5,13 +5,19 @@
 
 const CARBON_API_BASE = 'https://api.carbonintensity.org.uk';
 
+// Outward postcode used for the regional forecast (SE19 -> UKPN South East, region 14)
+export const CARBON_POSTCODE = 'SE19';
+
 /**
- * Fetch carbon intensity forecast for the next 24-48 hours
- * @returns {Promise<Array>} Array of forecast periods with intensity data
+ * Fetch the regional carbon intensity forecast for the next 48 hours
+ * Regional periods only carry `intensity.forecast` (no `actual`).
+ * @param {string} postcode - Outward part of a UK postcode, e.g. "SE19"
+ * @returns {Promise<Array>} Array of half-hourly forecast periods
  */
-export async function getCarbonIntensityForecast() {
-  // Get forecast data (returns next 48 hours in 30-minute intervals)
-  const url = `${CARBON_API_BASE}/intensity/date`;
+export async function getCarbonIntensityForecast(postcode = CARBON_POSTCODE) {
+  // API expects ISO8601 "YYYY-MM-DDTHH:MMZ"
+  const from = new Date().toISOString().slice(0, 16) + 'Z';
+  const url = `${CARBON_API_BASE}/regional/intensity/${from}/fw48h/postcode/${encodeURIComponent(postcode)}`;
 
   const response = await fetch(url);
 
@@ -20,7 +26,8 @@ export async function getCarbonIntensityForecast() {
   }
 
   const data = await response.json();
-  return data.data || [];
+  // Regional responses nest periods one level deeper: { data: { regionid, data: [...] } }
+  return data.data?.data || [];
 }
 
 /**

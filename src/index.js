@@ -285,7 +285,8 @@ async function getGasData(env, periodFrom, periodTo) {
  * Fetch and process carbon intensity data with caching
  */
 async function getCarbonData(env) {
-  const cacheKey = 'carbon:forecast';
+  // Regional key so stale national data isn't served from cache after the switch
+  const cacheKey = 'carbon:forecast:regional:SE19';
 
   // Try cache first
   const cached = await env.OCTOPUS_CACHE?.get(cacheKey, 'json');
